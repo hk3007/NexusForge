@@ -135,8 +135,8 @@ function LiveOnline() {
   return (
     <span className="hidden items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] text-muted xl:flex">
       <span className="relative flex h-1.5 w-1.5">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live opacity-60" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-live" />
       </span>
       LIVE · {online === null ? '—' : online.toLocaleString('en-IN')} ONLINE
     </span>

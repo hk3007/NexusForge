@@ -68,7 +68,7 @@ function StatCell({ stat }: { stat: LiveStat }) {
         {stat.suffix}
       </p>
       <p className="mt-3 flex items-start gap-2 font-mono text-[11px] uppercase leading-relaxed tracking-widest text-dim">
-        {stat.drifts && <span className="mt-1 h-1.5 w-1.5 flex-none animate-pulse-dot rounded-full bg-accent" />}
+        {stat.drifts && <span className="mt-1 h-1.5 w-1.5 flex-none animate-pulse-dot rounded-full bg-live" />}
         {stat.label}
       </p>
     </div>
@@ -80,7 +80,7 @@ export default function LiveStats() {
     <section className="border-t border-overlay/[0.08]">
       <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
         <div className="mb-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-dim">
-          <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+          <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-live" />
           telemetry · updating in real time
         </div>
         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-overlay/[0.08] bg-overlay/[0.08] md:grid-cols-4">

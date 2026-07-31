@@ -79,7 +79,7 @@ export default function CTFInteractivePreview() {
           {/* Simulated live leaderboard */}
           <GlassCard className="overflow-hidden" hover={false}>
             <div className="flex items-center gap-2.5 border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse-dot" />
+              <span className="h-2 w-2 rounded-full bg-live animate-pulse-dot" />
               <span className="font-mono text-xs text-muted">nexusforge / ctf-04-monsoon / scoreboard</span>
               <span className="ml-auto font-mono text-[10px] uppercase tracking-widest text-dim">live</span>
             </div>

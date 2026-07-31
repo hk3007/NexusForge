@@ -82,8 +82,8 @@ export default function Footer() {
         <div className="mb-12 flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-line bg-surface/80 px-6 py-5 backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live opacity-40" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-live" />
             </span>
             <span className="font-mono text-xs font-medium tracking-widest text-fg">
               ALL SYSTEMS OPERATIONAL — 99.99% UPTIME

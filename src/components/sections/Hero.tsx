@@ -103,7 +103,7 @@ export default function Hero() {
                 nexusforge / control-plane
               </span>
               <span className="ml-auto flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-dim">
-                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-live" />
                 {clock === null ? 'live' : `live · ${clock} ist`}
               </span>
             </div>

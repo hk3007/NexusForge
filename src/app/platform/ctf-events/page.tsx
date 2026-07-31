@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, CalendarDays, Flag, MapPin, Ticket, Timer, Users } from 'lucide-react';
 import HeroGlow from '@/components/ui/HeroGlow';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -58,7 +59,7 @@ const events: CTFEvent[] = [
     description: 'Live incident replays with real log sets. Bring a laptop; we bring the alerts and the noise.',
     format: 'Workshop · 1 day',
     location: 'Online',
-    entry: '₹499',
+    entry: '$6',
     seats: '200 seats',
     startsAt: '2026-09-27T10:00:00+05:30',
     status: 'upcoming',
@@ -150,6 +151,16 @@ export default function CTFEventsPage() {
 
   const liveEvent = useMemo(() => events.find((e) => e.status === 'live'), []);
 
+  const partnerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: partnerProgress } = useScroll({
+    target: partnerRef,
+    offset: ['start end', 'end start'],
+  });
+  const logoScale = useTransform(partnerProgress, [0, 0.5, 1], [0.82, 1, 0.88]);
+  const logoOpacity = useTransform(partnerProgress, [0, 0.2, 0.8, 1], [0.25, 1, 1, 0.35]);
+  const ringRotate = useTransform(partnerProgress, [0, 1], [0, 120]);
+  const glowOpacity = useTransform(partnerProgress, [0, 0.5, 1], [0.15, 0.5, 0.15]);
+
   return (
     <>
       {/* Hero */}
@@ -191,6 +202,64 @@ export default function CTFEventsPage() {
         </div>
       </section>
 
+      {/* Partnership banner */}
+      <section ref={partnerRef} className="relative overflow-hidden border-b border-overlay/[0.08] py-24 md:py-32">
+        <HeroGlow />
+        <div className="relative mx-auto flex max-w-7xl flex-col items-center px-5 text-center md:px-8">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
+            className="inline-flex items-center gap-2 rounded-md border border-line bg-overlay/[0.04] px-3 py-1.5 font-mono text-[11px] tracking-widest text-muted"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-live animate-pulse-dot" />
+            STRATEGIC PARTNER
+          </motion.span>
+
+          <motion.div
+            style={{ scale: logoScale, opacity: logoOpacity }}
+            className="relative mt-10 flex items-center justify-center py-6"
+          >
+            {/* Rotating dashed ring */}
+            <motion.span
+              aria-hidden="true"
+              style={{ rotate: ringRotate }}
+              className="absolute h-[240px] w-[240px] rounded-full border border-dashed border-line/80 sm:h-[300px] sm:w-[300px] md:h-[380px] md:w-[380px]"
+            />
+            <motion.span
+              aria-hidden="true"
+              style={{ rotate: ringRotate }}
+              className="absolute h-[190px] w-[190px] rounded-full border border-line/50 sm:h-[240px] sm:w-[240px] md:h-[300px] md:w-[300px]"
+            />
+            {/* Pulsing glow behind the mark */}
+            <motion.span
+              aria-hidden="true"
+              style={{ opacity: glowOpacity }}
+              className="absolute h-[200px] w-[200px] rounded-full bg-accent/25 blur-[80px] sm:h-[260px] sm:w-[260px] md:h-[340px] md:w-[340px]"
+            />
+            <Image
+              src="/athena-logo.png"
+              alt="Athena"
+              width={560}
+              height={128}
+              priority
+              className="relative h-16 w-auto dark:invert sm:h-24 md:h-32 lg:h-36"
+            />
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.7, 0.3, 1] }}
+            className="mt-10 max-w-xl font-mono text-[11px] tracking-widest text-dim"
+          >
+            CHALLENGE INFRASTRUCTURE &amp; ANTI-CHEAT · CO-ENGINEERED WITH ATHENA
+          </motion.p>
+        </div>
+      </section>
+
       {/* Live leaderboard + challenge arena mockup */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
@@ -203,7 +272,7 @@ export default function CTFEventsPage() {
             {/* Leaderboard */}
             <GlassCard hover={false} className="overflow-hidden">
               <div className="flex items-center gap-2.5 border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
-                <span className="h-2 w-2 rounded-full bg-accent animate-pulse-dot" />
+                <span className="h-2 w-2 rounded-full bg-live animate-pulse-dot" />
                 <span className="font-mono text-xs text-muted">scoreboard · live</span>
                 {liveEvent && (
                   <span className="ml-auto">

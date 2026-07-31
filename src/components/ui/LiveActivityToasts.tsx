@@ -61,7 +61,7 @@ export default function LiveActivityToasts() {
             </span>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-live" />
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                   {event.label} · just now
                 </p>

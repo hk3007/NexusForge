@@ -38,7 +38,7 @@ const tiers: PricingTier[] = [
   {
     id: 'basic',
     name: 'Basic',
-    price: '₹14,000',
+    price: '$170',
     period: '/month',
     description: 'For brochure sites that need to stay patched, backed up and online.',
     features: [
@@ -54,7 +54,7 @@ const tiers: PricingTier[] = [
   {
     id: 'growth',
     name: 'Growth',
-    price: '₹38,000',
+    price: '$450',
     period: '/month',
     description: 'For stores and lead engines where downtime is lost revenue.',
     features: [
@@ -199,7 +199,7 @@ export default function WebsiteManagementPage() {
             <GlassCard hover={false} className="overflow-hidden">
               <div className="flex items-center justify-between border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
                 <span className="flex items-center gap-2 font-mono text-xs text-muted">
-                  <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-accent" />
+                  <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-live" />
                   Client estate · 7 properties
                 </span>
                 <span className="font-mono text-[10px] text-dim">last check {lastCheck}s ago</span>

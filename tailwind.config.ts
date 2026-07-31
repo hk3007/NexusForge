@@ -20,6 +20,7 @@ const config: Config = {
           DEFAULT: 'rgb(var(--c-accent) / <alpha-value>)',
           hover: 'rgb(var(--c-accent-hover) / <alpha-value>)',
         },
+        live: 'rgb(var(--c-live) / <alpha-value>)',
         inverse: 'rgb(var(--c-inverse) / <alpha-value>)',
         overlay: 'rgb(var(--c-overlay) / <alpha-value>)',
         shade: 'rgb(var(--c-shade) / <alpha-value>)',

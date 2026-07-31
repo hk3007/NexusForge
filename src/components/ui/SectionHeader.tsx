@@ -32,7 +32,7 @@ export default function SectionHeader({
       )}
     >
       <span className="inline-flex items-center gap-2 rounded-md border border-line bg-overlay/[0.04] px-3 py-1.5 font-mono text-[11px] font-medium tracking-widest text-muted">
-        <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" />
+        <span className="h-1.5 w-1.5 rounded-full bg-live animate-pulse-dot" />
         {badge.toUpperCase()}
       </span>
       <h2 className="mt-4 text-3xl font-bold tracking-tight text-fg md:text-[2.6rem] md:leading-[1.1]">

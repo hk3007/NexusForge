@@ -24,7 +24,7 @@ const tracks: InternshipTrack[] = [
     name: 'Cybersecurity',
     duration: '16 weeks · part-time',
     seats: 40,
-    stipend: '₹12,000/mo stipend',
+    stipend: '$150/mo stipend',
     summary:
       'Offensive and defensive security, mentored by the engineers who run client estates. Live tickets from week four; weekly CTF ladders throughout.',
     icon: Shield,
@@ -41,7 +41,7 @@ const tracks: InternshipTrack[] = [
     name: 'Full-Stack Software Development',
     duration: '16 weeks · part-time',
     seats: 48,
-    stipend: '₹12,000/mo stipend',
+    stipend: '$150/mo stipend',
     summary:
       'Next.js, Node and Postgres — shipped, not slideware. You work on the same codebases our client work runs on, with one mentor per six interns.',
     icon: Code2,
@@ -58,7 +58,7 @@ const tracks: InternshipTrack[] = [
     name: 'DevOps / Cloud & Dev Tools',
     duration: '12 weeks · part-time',
     seats: 32,
-    stipend: '₹10,000/mo stipend',
+    stipend: '$120/mo stipend',
     summary:
       'The specialized toolchain track: Docker, AWS, CI/CD, Splunk and the glue that keeps 40+ production estates online. Shorter, sharper, tool-first.',
     icon: Cloud,

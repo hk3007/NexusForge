@@ -17,7 +17,7 @@ import HeroGlow from '@/components/ui/HeroGlow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import GlassCard from '@/components/ui/GlassCard';
 import NeonButton from '@/components/ui/NeonButton';
-import { formatINR } from '@/lib/utils';
+import { formatUSD } from '@/lib/utils';
 
 const pipeline = [
   {
@@ -45,7 +45,7 @@ const pipeline = [
     step: '04',
     icon: <BarChart3 className="h-5 w-5" />,
     title: 'Measure & Prove',
-    text: 'GA4, Tag Manager and server-side events tie every rupee of spend to leads and revenue.',
+    text: 'GA4, Tag Manager and server-side events tie every dollar of spend to leads and revenue.',
     output: 'one dashboard',
   },
 ];
@@ -58,13 +58,13 @@ const capabilities = [
 ];
 
 /* ROI model: deliberately simple, deliberately conservative. */
-const CPC = 18; // ₹ per click, blended
+const CPC = 0.22; // $ per click, blended
 const CVR = 0.032; // visit → lead
 const CLOSE = 0.22; // lead → customer
-const AOV = 8400; // ₹ average order value
+const AOV = 100; // $ average order value
 
 export default function SocialMediaGrowthPage() {
-  const [spend, setSpend] = useState(60000);
+  const [spend, setSpend] = useState(720);
 
   const projection = useMemo(() => {
     const clicks = Math.round(spend / CPC);
@@ -168,18 +168,18 @@ export default function SocialMediaGrowthPage() {
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-widest text-dim">Monthly ad spend</p>
-                <p className="mt-1 text-4xl font-extrabold tracking-tight text-fg">{formatINR(spend)}</p>
+                <p className="mt-1 text-4xl font-extrabold tracking-tight text-fg">{formatUSD(spend)}</p>
               </div>
               <p className="font-mono text-xs text-dim">
-                CPC ₹{CPC} · CVR {(CVR * 100).toFixed(1)}% · close rate {(CLOSE * 100).toFixed(0)}%
+                CPC ${CPC} · CVR {(CVR * 100).toFixed(1)}% · close rate {(CLOSE * 100).toFixed(0)}%
               </p>
             </div>
 
             <input
               type="range"
-              min={10000}
-              max={500000}
-              step={5000}
+              min={120}
+              max={6000}
+              step={60}
               value={spend}
               onChange={(e) => setSpend(Number(e.target.value))}
               aria-label="Monthly ad spend"
@@ -189,16 +189,16 @@ export default function SocialMediaGrowthPage() {
                 [&::-webkit-slider-thumb]:shadow-glow-white"
             />
             <div className="mt-2 flex justify-between font-mono text-[10px] text-dim">
-              <span>₹10K</span>
-              <span>₹5L</span>
+              <span>$120</span>
+              <span>$6K</span>
             </div>
 
             <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-overlay/[0.08] bg-overlay/[0.08] md:grid-cols-4">
               {[
-                { label: 'Projected clicks', value: projection.clicks.toLocaleString('en-IN') },
-                { label: 'Projected leads', value: projection.leads.toLocaleString('en-IN') },
-                { label: 'New customers', value: projection.customers.toLocaleString('en-IN') },
-                { label: 'Projected revenue', value: formatINR(projection.revenue) },
+                { label: 'Projected clicks', value: projection.clicks.toLocaleString('en-US') },
+                { label: 'Projected leads', value: projection.leads.toLocaleString('en-US') },
+                { label: 'New customers', value: projection.customers.toLocaleString('en-US') },
+                { label: 'Projected revenue', value: formatUSD(projection.revenue) },
               ].map((m) => (
                 <div key={m.label} className="bg-base p-6">
                   <p className="text-2xl font-extrabold tracking-tight text-fg">{m.value}</p>

@@ -98,10 +98,3 @@ export interface Testimonial {
   initials: string;
   title: string;
 }
-
-/* ---------- Quote builder ---------- */
-export interface QuoteService {
-  id: string;
-  label: string;
-  basePrice: number;
-}
