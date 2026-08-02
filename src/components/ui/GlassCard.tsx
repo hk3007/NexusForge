@@ -10,7 +10,7 @@ interface GlassCardProps {
   delay?: number;
 }
 
-/** Charcoal glass card with white hover border. */
+/** Charcoal glass card with a ruby hover border. */
 export default function GlassCard({ children, className, hover = true, delay = 0 }: GlassCardProps) {
   return (
     <motion.div

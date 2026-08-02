@@ -13,7 +13,7 @@ interface NeonButtonProps {
   disabled?: boolean;
 }
 
-/** White CTA button with a soft glow — solid, outline and ghost variants. */
+/** Ruby-accent CTA button with a soft glow — solid, outline and ghost variants. */
 export default function NeonButton({
   children,
   href,

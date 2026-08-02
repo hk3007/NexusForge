@@ -35,7 +35,7 @@ export default function SectionHeader({
         <span className="h-1.5 w-1.5 rounded-full bg-live animate-pulse-dot" />
         {badge.toUpperCase()}
       </span>
-      <h2 className="mt-4 text-3xl font-bold tracking-tight text-fg md:text-[2.6rem] md:leading-[1.1]">
+      <h2 className="mt-4 text-3xl font-bold tracking-tight text-black dark:text-white md:text-[2.6rem] md:leading-[1.1]">
         {title}
       </h2>
       {description ? (
