@@ -25,83 +25,186 @@ interface NavDropItem {
   icon: React.ReactNode;
 }
 
+/* =========================================================
+   SERVICES
+========================================================= */
+
 const servicesItems: NavDropItem[] = [
   {
     label: 'Website Management',
-    description: '24/7 monitoring, maintenance & feature development',
+    description:
+      '24/7 monitoring, maintenance & feature development',
     href: '/services/website-management',
     icon: <Globe className="h-4 w-4" />,
   },
   {
     label: 'Social Media & Growth',
-    description: 'Content engine, SEO, GA4 & performance marketing',
+    description:
+      'Content engine, SEO, GA4 & performance marketing',
     href: '/services/social-media-growth',
     icon: <TrendingUp className="h-4 w-4" />,
   },
   {
     label: 'Industry Internships',
-    description: 'Cybersecurity, Full-Stack & DevOps career tracks',
+    description:
+      'Cybersecurity, Full-Stack & DevOps career tracks',
     href: '/academy/internships',
     icon: <GraduationCap className="h-4 w-4" />,
   },
 ];
 
+/* =========================================================
+   PLATFORMS
+========================================================= */
+
 const platformItems: NavDropItem[] = [
   {
     label: 'CTF & Developer Events',
-    description: 'Live hacking arenas, hackathons & code sprints',
+    description:
+      'Live hacking arenas, hackathons & code sprints',
     href: '/platform/ctf-events',
     icon: <Flag className="h-4 w-4" />,
   },
   {
     label: 'Hire Developers',
-    description: 'Vetted, verified elite tech talent hub',
+    description:
+      'Vetted, verified elite tech talent hub',
     href: '/platform/hire-developers',
     icon: <Users className="h-4 w-4" />,
   },
 ];
 
-function Dropdown({ label, items }: { label: string; items: NavDropItem[] }) {
+/* =========================================================
+   DROPDOWN
+========================================================= */
+
+function Dropdown({
+  label,
+  items,
+}: {
+  label: string;
+  items: NavDropItem[];
+}) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
+        type="button"
         className={cn(
-          'flex items-center gap-1 font-mono text-xs tracking-wide transition-colors',
-          open ? 'text-fg' : 'text-muted hover:text-fg',
+          'flex items-center gap-1.5 rounded-lg',
+          'px-2.5 py-2',
+          'font-mono text-[11px] font-medium',
+          'tracking-[0.08em]',
+          'transition-all duration-200',
+          open
+            ? 'bg-overlay/[0.06] text-fg'
+            : 'text-muted hover:bg-overlay/[0.04] hover:text-fg',
         )}
         aria-expanded={open}
       >
         {label}
-        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform duration-200', open && 'rotate-180')} />
+
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5',
+            'transition-transform duration-200',
+            open && 'rotate-180',
+          )}
+        />
       </button>
+
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
-            className="absolute left-0 top-full w-80 pt-3"
+            initial={{
+              opacity: 0,
+              y: 10,
+              scale: 0.97,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              y: 10,
+              scale: 0.97,
+            }}
+            transition={{
+              duration: 0.18,
+              ease: [0.2, 0.7, 0.3, 1],
+            }}
+            className="absolute left-0 top-full z-[70] w-[340px] pt-3"
           >
-            <div className="overflow-hidden rounded-2xl border border-line bg-base shadow-elevated backdrop-blur-xl">
-              {items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-overlay/[0.05]"
-                >
-                  <span className="mt-0.5 flex h-8 w-8 flex-none items-center justify-center rounded-lg border border-line bg-soft text-muted transition-colors group-hover:border-line-strong group-hover:text-accent">
-                    {item.icon}
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-fg">{item.label}</span>
-                    <span className="mt-0.5 block text-xs leading-relaxed text-dim">{item.description}</span>
-                  </span>
-                </Link>
-              ))}
+            <div
+              className={cn(
+                'overflow-hidden rounded-2xl',
+                'border border-line',
+                'bg-base/95',
+                'backdrop-blur-2xl',
+                'shadow-2xl',
+              )}
+            >
+              <div className="p-2">
+                {items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      'group flex items-start gap-3',
+                      'rounded-xl px-3 py-3',
+                      'transition-all duration-200',
+                      'hover:bg-overlay/[0.05]',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'mt-0.5 flex h-9 w-9 flex-none',
+                        'items-center justify-center',
+                        'rounded-xl',
+                        'border border-line',
+                        'bg-soft text-muted',
+                        'transition-all duration-200',
+                        'group-hover:border-line-strong',
+                        'group-hover:bg-overlay/[0.05]',
+                        'group-hover:text-accent',
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-fg">
+                        {item.label}
+                      </span>
+
+                      <span className="mt-1 block text-xs leading-relaxed text-dim">
+                        {item.description}
+                      </span>
+                    </span>
+
+                    <ArrowUpRight
+                      className={cn(
+                        'ml-auto mt-1 h-3.5 w-3.5',
+                        'flex-none text-dim',
+                        'opacity-0',
+                        'transition-all duration-200',
+                        'group-hover:-translate-y-0.5',
+                        'group-hover:translate-x-0.5',
+                        'group-hover:text-accent',
+                        'group-hover:opacity-100',
+                      )}
+                    />
+                  </Link>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -110,145 +213,628 @@ function Dropdown({ label, items }: { label: string; items: NavDropItem[] }) {
   );
 }
 
+/* =========================================================
+   NEXFORTECH BRAND MARK
+========================================================= */
+
 function BrandMark() {
   return (
-    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="1.2" y="1.2" width="21.6" height="21.6" rx="6" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="12" cy="12" r="3.2" fill="currentColor" />
-      <path d="M12 1.2v5.6M12 17.2v5.6M1.2 12h5.6M17.2 12h5.6" stroke="currentColor" strokeWidth="1.5" />
+    <svg
+      className="h-7 w-7"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <rect
+        x="1.2"
+        y="1.2"
+        width="21.6"
+        height="21.6"
+        rx="6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+
+      <circle
+        cx="12"
+        cy="12"
+        r="3.2"
+        fill="currentColor"
+      />
+
+      <path
+        d="M12 1.2v5.6M12 17.2v5.6M1.2 12h5.6M17.2 12h5.6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
     </svg>
   );
 }
 
-// Fluctuating "engineers online" counter — pure client-side simulation
+/* =========================================================
+   LIVE ONLINE
+========================================================= */
+
 function LiveOnline() {
   const [online, setOnline] = useState<number | null>(null);
 
   useEffect(() => {
-    setOnline(1240 + Math.floor(Math.random() * 40));
+    setOnline(
+      1240 + Math.floor(Math.random() * 40),
+    );
+
     const id = setInterval(() => {
-      setOnline((v) => (v === null ? v : Math.max(1180, v + Math.floor(Math.random() * 13) - 6)));
+      setOnline((value) =>
+        value === null
+          ? value
+          : Math.max(
+            1180,
+            value +
+            Math.floor(Math.random() * 13) -
+            6,
+          ),
+      );
     }, 3000);
+
     return () => clearInterval(id);
   }, []);
 
   return (
-    <span className="hidden items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] text-muted xl:flex">
+    <span
+      className={cn(
+        'hidden xl:flex',
+        'items-center gap-2',
+        'rounded-full',
+        'border border-line',
+        'bg-soft/40',
+        'px-3 py-1.5',
+        'font-mono text-[10px]',
+        'tracking-[0.12em]',
+        'text-muted',
+      )}
+    >
       <span className="relative flex h-1.5 w-1.5">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live opacity-60" />
+
         <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-live" />
       </span>
-      LIVE · {online === null ? '—' : online.toLocaleString('en-IN')} ONLINE
+
+      LIVE ·{' '}
+      {online === null
+        ? '—'
+        : online.toLocaleString('en-IN')}{' '}
+      ONLINE
     </span>
   );
 }
 
+/* =========================================================
+   NAVBAR
+========================================================= */
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
   const pathname = usePathname();
 
-  // Close the drawer whenever the route changes
+  /* Close mobile menu after route change */
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
+  /* Prevent body scroll when mobile drawer is open */
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow =
+      document.body.style.overflow;
+
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow =
+        previousOverflow;
+    };
+  }, [mobileOpen]);
+
+  /* =======================================================
+     MOBILE LINKS
+  ======================================================= */
+
   const mobileLinks = [
-    { label: 'Home', href: '/' },
-    ...servicesItems.map(({ label, href }) => ({ label, href })),
-    ...platformItems.map(({ label, href }) => ({ label, href })),
-    { label: 'Contact', href: '/contact' },
+    {
+      label: 'Home',
+      href: '/',
+    },
+    {
+      label: 'Website Management',
+      href: '/services/website-management',
+    },
+    {
+      label: 'Social Media & Growth',
+      href: '/services/social-media-growth',
+    },
+    {
+      label: 'Industry Internships',
+      href: '/academy/internships',
+    },
+    {
+      label: 'CTF & Developer Events',
+      href: '/platform/ctf-events',
+    },
+    {
+      label: 'Hire Developers',
+      href: '/platform/hire-developers',
+    },
+    {
+      label: 'Academy',
+      href: '/academy/internships',
+    },
+    {
+      label: 'Contact',
+      href: '/contact',
+    },
   ];
 
+  /* =======================================================
+     ACTIVE LINK
+  ======================================================= */
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+
+    return pathname.startsWith(href);
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-overlay/[0.08] bg-base/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center gap-8 px-5 md:px-8">
-        <Link href="/" className="flex items-center gap-2.5 text-lg font-extrabold tracking-tight text-fg">
-          <BrandMark />
-          Nexus Forge
-        </Link>
+    <>
+      {/* ===================================================
+          FLOATING NEXFORTECH NAVBAR
+      =================================================== */}
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
-          <Dropdown label="SERVICES" items={servicesItems} />
-          <Dropdown label="PLATFORMS" items={platformItems} />
-          <Link
-            href="/academy/internships"
-            className="font-mono text-xs tracking-wide text-muted transition-colors hover:text-fg"
-          >
-            ACADEMY
-          </Link>
-          <Link
-            href="/contact"
-            className="font-mono text-xs tracking-wide text-muted transition-colors hover:text-fg"
-          >
-            CONTACT
-          </Link>
-        </nav>
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-50',
+          'px-3 pt-3',
+          'sm:px-4 sm:pt-4',
+          'lg:px-6 lg:pt-5',
+          'pointer-events-none',
+        )}
+      >
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: -18,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.2, 0.7, 0.3, 1],
+          }}
+          className={cn(
+            'pointer-events-auto',
+            'mx-auto w-full max-w-7xl',
+            'rounded-2xl',
+            'lg:rounded-[22px]',
+            'border border-line',
+            'bg-base/80',
+            'backdrop-blur-2xl',
+            'shadow-[0_12px_45px_rgba(0,0,0,0.10)]',
+          )}
+        >
+          {/* =================================================
+              MAIN NAVIGATION
+          ================================================= */}
 
-        <div className="ml-auto hidden items-center gap-3 lg:flex">
-          <LiveOnline />
-          <ThemeToggle />
-          <Link
-            href="/contact"
-            className="rounded-lg border border-line px-4 py-2 text-sm font-semibold text-fg transition-colors hover:border-accent"
+          <div
+            className={cn(
+              'flex items-center',
+              'h-[64px]',
+              'sm:h-[68px]',
+              'gap-3',
+              'sm:gap-5',
+              'lg:gap-7',
+              'px-3',
+              'sm:px-5',
+              'lg:px-6',
+            )}
           >
-            Client Login
-          </Link>
-          <Link
-            href="/contact"
-            className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-inverse shadow-glow-soft transition-all hover:bg-accent-hover hover:shadow-glow-white"
-          >
-            Launch Portal
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
+            {/* =================================================
+                BRAND
+            ================================================= */}
 
-        {/* Mobile burger */}
-        <div className="ml-auto flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-fg"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
-      </div>
+            <Link
+              href="/"
+              aria-label="NexForTech Home"
+              className={cn(
+                'group flex flex-none',
+                'items-center gap-2.5',
+                'text-base sm:text-lg',
+                'font-extrabold',
+                'tracking-tight',
+                'text-fg',
+              )}
+            >
+              <span
+                className={cn(
+                  'transition-transform duration-300',
+                  'group-hover:rotate-6',
+                )}
+              >
+                <BrandMark />
+              </span>
 
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.nav
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.2, 0.7, 0.3, 1] }}
-            className="overflow-hidden border-t border-overlay/[0.08] bg-soft lg:hidden"
-            aria-label="Mobile"
-          >
-            <div className="space-y-1 px-5 py-4">
-              {mobileLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-overlay/[0.05] hover:text-fg"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {/* Desktop / Tablet */}
+              <span className="hidden xs:inline">
+                NexForTech
+              </span>
+
+              {/* Small Mobile */}
+              <span className="xs:hidden">
+                NexForTech
+              </span>
+            </Link>
+
+            {/* =================================================
+                DESKTOP NAVIGATION
+            ================================================= */}
+
+            <nav
+              className="hidden items-center gap-1 lg:flex"
+              aria-label="Main navigation"
+            >
+              <Dropdown
+                label="SERVICES"
+                items={servicesItems}
+              />
+
+              <Dropdown
+                label="PLATFORMS"
+                items={platformItems}
+              />
+
+              <Link
+                href="/academy/internships"
+                className={cn(
+                  'rounded-lg px-2.5 py-2',
+                  'font-mono text-[11px]',
+                  'font-medium',
+                  'tracking-[0.08em]',
+                  'transition-all duration-200',
+                  isActive('/academy')
+                    ? 'bg-overlay/[0.06] text-fg'
+                    : 'text-muted hover:bg-overlay/[0.04] hover:text-fg',
+                )}
+              >
+                ACADEMY
+              </Link>
+
               <Link
                 href="/contact"
-                className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-inverse"
+                className={cn(
+                  'rounded-lg px-2.5 py-2',
+                  'font-mono text-[11px]',
+                  'font-medium',
+                  'tracking-[0.08em]',
+                  'transition-all duration-200',
+                  isActive('/contact')
+                    ? 'bg-overlay/[0.06] text-fg'
+                    : 'text-muted hover:bg-overlay/[0.04] hover:text-fg',
+                )}
+              >
+                CONTACT
+              </Link>
+            </nav>
+
+            {/* =================================================
+                RIGHT SIDE
+            ================================================= */}
+
+            <div
+              className={cn(
+                'ml-auto hidden lg:flex',
+                'items-center gap-2.5',
+              )}
+            >
+              <LiveOnline />
+
+              <ThemeToggle />
+
+              {/* Client Login */}
+              <Link
+                href="/contact"
+                className={cn(
+                  'rounded-xl',
+                  'border border-line',
+                  'bg-soft/30',
+                  'px-3.5 py-2',
+                  'text-sm font-semibold',
+                  'text-fg',
+                  'transition-all duration-200',
+                  'hover:border-line-strong',
+                  'hover:bg-soft',
+                )}
+              >
+                Client Login
+              </Link>
+
+              {/* Launch Portal */}
+              <Link
+                href="/contact"
+                className={cn(
+                  'group flex items-center',
+                  'gap-1.5',
+                  'rounded-xl',
+                  'bg-accent',
+                  'px-4 py-2',
+                  'text-sm font-semibold',
+                  'text-inverse',
+                  'shadow-glow-soft',
+                  'transition-all duration-200',
+                  'hover:bg-accent-hover',
+                  'hover:shadow-glow-white',
+                )}
               >
                 Launch Portal
-                <ArrowUpRight className="h-4 w-4" />
+
+                <ArrowUpRight
+                  className={cn(
+                    'h-4 w-4',
+                    'transition-transform duration-200',
+                    'group-hover:-translate-y-0.5',
+                    'group-hover:translate-x-0.5',
+                  )}
+                />
               </Link>
             </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
-    </header>
+
+            {/* =================================================
+                MOBILE CONTROLS
+            ================================================= */}
+
+            <div
+              className={cn(
+                'ml-auto flex lg:hidden',
+                'items-center gap-2',
+              )}
+            >
+              <ThemeToggle />
+
+              <button
+                type="button"
+                className={cn(
+                  'flex h-10 w-10',
+                  'items-center justify-center',
+                  'rounded-xl',
+                  'border border-line',
+                  'bg-soft/30',
+                  'text-fg',
+                  'transition-all duration-200',
+                  'hover:border-line-strong',
+                  'hover:bg-soft',
+                )}
+                onClick={() =>
+                  setMobileOpen(
+                    (value) => !value,
+                  )
+                }
+                aria-label={
+                  mobileOpen
+                    ? 'Close NexForTech navigation'
+                    : 'Open NexForTech navigation'
+                }
+                aria-expanded={mobileOpen}
+              >
+                <AnimatePresence
+                  mode="wait"
+                  initial={false}
+                >
+                  {mobileOpen ? (
+                    <motion.span
+                      key="close"
+                      initial={{
+                        opacity: 0,
+                        rotate: -90,
+                        scale: 0.8,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        rotate: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        rotate: 90,
+                        scale: 0.8,
+                      }}
+                    >
+                      <X className="h-5 w-5" />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="menu"
+                      initial={{
+                        opacity: 0,
+                        rotate: 90,
+                        scale: 0.8,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        rotate: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        rotate: -90,
+                        scale: 0.8,
+                      }}
+                    >
+                      <Menu className="h-5 w-5" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
+          </div>
+
+          {/* =================================================
+              MOBILE MENU
+          ================================================= */}
+
+          <AnimatePresence initial={false}>
+            {mobileOpen && (
+              <motion.div
+                initial={{
+                  height: 0,
+                  opacity: 0,
+                }}
+                animate={{
+                  height: 'auto',
+                  opacity: 1,
+                }}
+                exit={{
+                  height: 0,
+                  opacity: 0,
+                }}
+                transition={{
+                  duration: 0.28,
+                  ease: [0.2, 0.7, 0.3, 1],
+                }}
+                className="overflow-hidden lg:hidden"
+              >
+                <div
+                  className={cn(
+                    'border-t border-line',
+                    'px-3 pb-4 pt-3',
+                    'sm:px-5 sm:pb-5',
+                  )}
+                >
+                  <nav
+                    className="space-y-1"
+                    aria-label="NexForTech mobile navigation"
+                  >
+                    {mobileLinks.map(
+                      (link, index) => (
+                        <motion.div
+                          key={link.href}
+                          initial={{
+                            opacity: 0,
+                            x: -8,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            x: 0,
+                          }}
+                          transition={{
+                            delay:
+                              index * 0.025,
+                            duration: 0.2,
+                          }}
+                        >
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              'flex items-center',
+                              'rounded-xl',
+                              'px-3 py-3',
+                              'text-sm font-medium',
+                              'transition-all duration-200',
+                              isActive(
+                                link.href,
+                              )
+                                ? 'bg-overlay/[0.06] text-fg'
+                                : 'text-muted hover:bg-overlay/[0.04] hover:text-fg',
+                            )}
+                          >
+                            <span>
+                              {link.label}
+                            </span>
+
+                            {isActive(
+                              link.href,
+                            ) && (
+                                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-accent" />
+                              )}
+                          </Link>
+                        </motion.div>
+                      ),
+                    )}
+                  </nav>
+
+                  {/* =================================================
+                      MOBILE ACTIONS
+                  ================================================= */}
+
+                  <div
+                    className={cn(
+                      'mt-3 grid',
+                      'grid-cols-1',
+                      'gap-2',
+                      'sm:grid-cols-2',
+                    )}
+                  >
+                    <Link
+                      href="/contact"
+                      className={cn(
+                        'flex items-center',
+                        'justify-center',
+                        'rounded-xl',
+                        'border border-line',
+                        'bg-soft/30',
+                        'px-4 py-3',
+                        'text-sm font-semibold',
+                        'text-fg',
+                        'transition-all duration-200',
+                        'hover:border-line-strong',
+                      )}
+                    >
+                      Client Login
+                    </Link>
+
+                    <Link
+                      href="/contact"
+                      className={cn(
+                        'flex items-center',
+                        'justify-center',
+                        'gap-1.5',
+                        'rounded-xl',
+                        'bg-accent',
+                        'px-4 py-3',
+                        'text-sm font-semibold',
+                        'text-inverse',
+                        'shadow-glow-soft',
+                      )}
+                    >
+                      Launch Portal
+
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+
+                  {/* =================================================
+                      MOBILE LIVE STATUS
+                  ================================================= */}
+
+                  <div className="mt-3 flex justify-center sm:hidden">
+                    <LiveOnline />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </header>
+
+      {/* =====================================================
+          FLOATING NAVBAR SPACER
+      ===================================================== */}
+
+      <div className="h-[88px] sm:h-[96px] lg:h-[104px]" />
+    </>
   );
 }
