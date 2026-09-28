@@ -34,17 +34,6 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* Trust strip */}
-      <div className="overflow-hidden border-b border-overlay/[0.08] py-6" aria-label="Selected clients">
-        <div className="flex w-max animate-marquee gap-14">
-          {[...clients, ...clients].map((c, i) => (
-            <span key={i} className="whitespace-nowrap text-lg font-semibold tracking-tight text-dim">
-              {c}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <ServicesBento />
 
       {/* Live stats band */}

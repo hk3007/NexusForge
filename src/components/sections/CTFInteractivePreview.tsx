@@ -2,128 +2,100 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ArrowUpRight,
   Flag,
   Shield,
   Trophy,
   Zap,
-  Activity,
   Terminal,
+  Lock,
+  CalendarClock,
 } from 'lucide-react';
 
 import SectionHeader from '@/components/ui/SectionHeader';
-import type { LeaderboardEntry } from '@/types';
 import { cn } from '@/lib/utils';
 
-const baseBoard: LeaderboardEntry[] = [
-  {
-    rank: 1,
-    team: 'nullbyte_ninjas',
-    solves: 14,
-    points: 4820,
-    lastSolve: 'web/ssti-bakery',
-  },
-  {
-    rank: 2,
-    team: 'deccan_daemons',
-    solves: 13,
-    points: 4510,
-    lastSolve: 'rev/nullbyte',
-  },
-  {
-    rank: 3,
-    team: 'p0int_break',
-    solves: 12,
-    points: 4180,
-    lastSolve: 'cloud/leaky-bucket',
-  },
-  {
-    rank: 4,
-    team: 'shellsmiths',
-    solves: 11,
-    points: 3960,
-    lastSolve: 'crypto/lattice-lane',
-  },
-  {
-    rank: 5,
-    team: 'zero_cool_v2',
-    solves: 10,
-    points: 3640,
-    lastSolve: 'pwn/heap-of-trouble',
-  },
-];
+/* =========================================================
+   EVENT DETAILS
+   ---------------------------------------------------------
+   No CTF has run yet, so this section is an honest
+   "coming soon" state rather than a simulated live
+   leaderboard. Update EVENT_NAME / EVENT_DATE when the
+   first event is scheduled.
+========================================================= */
 
-const feedEvents: [string, string][] = [
-  ['solved', 'web/ssti-bakery · nullbyte_ninjas'],
-  ['first blood', 'rev/nullbyte · deccan_daemons'],
-  ['solved', 'cloud/leaky-bucket · p0int_break'],
-  ['verified', 'skill report · A. Pawar'],
-  ['solved', 'crypto/lattice-lane · shellsmiths'],
-];
+const EVENT_NAME = 'Operation Monsoon';
+const EVENT_SLUG = 'nexfortech / ctf-01-monsoon';
+const EVENT_DATE = new Date('2026-11-15T09:00:00+05:30'); // update to real launch date
 
 const stats = [
   {
     icon: <Trophy className="h-4 w-4" />,
-    value: '96',
-    label: 'Events run',
+    value: 'TBA',
+    label: 'Prize pool',
   },
   {
     icon: <Shield className="h-4 w-4" />,
-    value: '2,400',
-    label: 'Concurrent teams',
+    value: 'Open',
+    label: 'Registration',
   },
   {
     icon: <Zap className="h-4 w-4" />,
-    value: '1,204',
-    label: 'Verified reports',
+    value: '#1',
+    label: 'First event',
   },
 ];
 
-export default function CTFInteractivePreview() {
-  const [board, setBoard] =
-    useState<LeaderboardEntry[]>(baseBoard);
+/* =========================================================
+   COUNTDOWN
+========================================================= */
 
-  const [feedIdx, setFeedIdx] =
-    useState(0);
-
-  const [lastUpdate, setLastUpdate] =
-    useState(0);
+function useCountdown(target: Date) {
+  const [remaining, setRemaining] = useState(() =>
+    Math.max(0, target.getTime() - Date.now()),
+  );
 
   useEffect(() => {
     const id = setInterval(() => {
-      setBoard((previous) =>
-        [...previous]
-          .map((entry) => ({
-            ...entry,
-            points:
-              entry.points +
-              Math.floor(Math.random() * 40),
-          }))
-          .sort(
-            (a, b) =>
-              b.points - a.points,
-          )
-          .map((entry, index) => ({
-            ...entry,
-            rank: index + 1,
-          })),
-      );
-
-      setFeedIdx(
-        (index) =>
-          (index + 1) %
-          feedEvents.length,
-      );
-
-      setLastUpdate(
-        (value) => value + 1,
-      );
-    }, 2400);
+      setRemaining(Math.max(0, target.getTime() - Date.now()));
+    }, 1000);
 
     return () => clearInterval(id);
-  }, []);
+  }, [target]);
+
+  const totalSeconds = Math.floor(remaining / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return { days, hours, minutes, seconds, isLive: remaining <= 0 };
+}
+
+function CountdownUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div
+      className={cn(
+        'flex flex-col items-center',
+        'rounded-lg border border-line',
+        'bg-soft/50 px-3 py-2.5',
+        'dark:border-white/[0.08] dark:bg-white/[0.03]',
+      )}
+    >
+      <span className="font-mono text-lg font-bold tabular-nums text-fg sm:text-xl">
+        {String(value).padStart(2, '0')}
+      </span>
+      <span className="mt-0.5 font-mono text-[8px] uppercase tracking-widest text-dim">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+export default function CTFInteractivePreview() {
+  const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE);
 
   return (
     <section
@@ -215,9 +187,9 @@ export default function CTFInteractivePreview() {
 
           <div>
             <SectionHeader
-              badge="flag{live.arena}"
-              title="The CTF Arena is always on."
-              description="Weekly ladders and 24-hour capture-the-flag events on isolated infrastructure. Timed, audited, anti-cheat enforced — and every solve builds a verified skill record."
+              badge="flag{coming.soon}"
+              title="The CTF Arena launches soon."
+              description="Our first capture-the-flag event is in the works — timed, audited, anti-cheat enforced infrastructure, with every solve building a verified skill record. Register your interest to get notified the moment the gates open."
               className="mb-8"
             />
 
@@ -350,7 +322,7 @@ export default function CTFInteractivePreview() {
                   hover:bg-accent-hover
                 "
               >
-                Enter the Arena
+                Notify Me
 
                 <ArrowUpRight
                   className="
@@ -390,7 +362,7 @@ export default function CTFInteractivePreview() {
                       w-full
                       animate-ping
                       rounded-full
-                      bg-live
+                      bg-accent
                       opacity-50
                     "
                   />
@@ -401,18 +373,18 @@ export default function CTFInteractivePreview() {
                       h-2
                       w-2
                       rounded-full
-                      bg-live
+                      bg-accent
                     "
                   />
                 </span>
 
-                ARENA ONLINE
+                ARENA LAUNCHING SOON
               </span>
             </div>
           </div>
 
           {/* =================================================
-              LIVE CONSOLE
+              CONSOLE — COMING SOON STATE
           ================================================= */}
 
           <motion.div
@@ -492,7 +464,7 @@ export default function CTFInteractivePreview() {
                 <Terminal className="h-3.5 w-3.5 text-dim" />
 
                 <span className="truncate font-mono text-[10px] text-muted sm:text-xs">
-                  nexfortech / ctf-04-monsoon
+                  {EVENT_SLUG}
                 </span>
 
                 <span
@@ -503,210 +475,77 @@ export default function CTFInteractivePreview() {
                     gap-1.5
                     rounded-full
                     border
-                    border-live/20
-                    bg-live/[0.05]
+                    border-line
+                    bg-soft
                     px-2
                     py-1
                     font-mono
                     text-[8px]
                     uppercase
                     tracking-widest
-                    text-live
+                    text-dim
+
+                    dark:border-white/[0.08]
+                    dark:bg-white/[0.035]
                   "
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-live" />
-                  LIVE
+                  <Lock className="h-2.5 w-2.5" />
+                  LOCKED
                 </span>
               </div>
 
               {/* =================================================
-                  CONSOLE META
+                  EVENT NAME
               ================================================= */}
 
               <div
                 className="
                   flex
-                  flex-wrap
                   items-center
                   justify-between
                   gap-3
                   border-b
                   border-line
                   px-4
-                  py-3
+                  py-4
 
                   dark:border-white/[0.06]
                 "
               >
-                <div className="flex items-center gap-2">
-                  <Activity className="h-3.5 w-3.5 text-accent" />
+                <div>
+                  <p className="font-mono text-[9px] uppercase tracking-widest text-dim">
+                    First event
+                  </p>
+                  <p className="mt-1 text-base font-bold tracking-tight text-fg sm:text-lg">
+                    {EVENT_NAME}
+                  </p>
+                </div>
 
-                  <span className="font-mono text-[9px] tracking-wider text-muted">
-                    SCOREBOARD
+                <Flag className="h-5 w-5 flex-none text-accent" />
+              </div>
+
+              {/* =================================================
+                  COUNTDOWN
+              ================================================= */}
+
+              <div className="px-4 py-6 sm:px-6">
+                <div className="mb-4 flex items-center gap-2">
+                  <CalendarClock className="h-3.5 w-3.5 text-accent" />
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-muted">
+                    Doors open in
                   </span>
                 </div>
 
-                <span className="font-mono text-[9px] text-dim">
-                  UPDATE #{lastUpdate}
-                </span>
-              </div>
-
-              {/* =================================================
-                  LEADERBOARD
-              ================================================= */}
-
-              <div className="px-3 py-2 sm:px-4">
-                <div
-                  className="
-                    grid
-                    grid-cols-[36px_1fr_auto]
-                    gap-3
-                    px-2
-                    py-2
-                    font-mono
-                    text-[8px]
-                    uppercase
-                    tracking-widest
-                    text-dim
-                  "
-                >
-                  <span>#</span>
-                  <span>Team</span>
-                  <span>Score</span>
-                </div>
-
-                <div>
-                  {board.map(
-                    (entry) => (
-                      <motion.div
-                        key={entry.team}
-                        layout
-                        transition={{
-                          duration: 0.45,
-                          ease: [
-                            0.2,
-                            0.7,
-                            0.3,
-                            1,
-                          ],
-                        }}
-                        className="
-                          group
-                          grid
-                          grid-cols-[36px_1fr_auto]
-                          items-center
-                          gap-3
-                          rounded-xl
-                          border
-                          border-transparent
-                          px-2
-                          py-3
-                          transition-colors
-                          duration-200
-
-                          hover:border-line
-                          hover:bg-soft/50
-
-                          dark:hover:border-white/[0.06]
-                          dark:hover:bg-white/[0.025]
-                        "
-                      >
-                        {/* Rank */}
-                        <span
-                          className={cn(
-                            `
-                            flex
-                            h-8
-                            w-8
-                            items-center
-                            justify-center
-                            rounded-lg
-                            border
-                            font-mono
-                            text-xs
-                            font-bold
-                            `,
-                            entry.rank === 1
-                              ? `
-                                border-accent
-                                bg-accent
-                                text-inverse
-                                `
-                              : `
-                                border-line
-                                bg-soft
-                                text-muted
-                                dark:border-white/[0.08]
-                                dark:bg-white/[0.035]
-                                `,
-                          )}
-                        >
-                          {entry.rank}
-                        </span>
-
-                        {/* Team */}
-                        <div className="min-w-0">
-                          <p
-                            className="
-                              truncate
-                              font-mono
-                              text-[11px]
-                              font-medium
-                              text-fg
-                              sm:text-sm
-                            "
-                          >
-                            {entry.team}
-                          </p>
-
-                          <p
-                            className="
-                              mt-0.5
-                              truncate
-                              font-mono
-                              text-[8px]
-                              text-dim
-                              sm:text-[10px]
-                            "
-                          >
-                            last: {entry.lastSolve}
-                          </p>
-                        </div>
-
-                        {/* Score */}
-                        <div className="text-right">
-                          <p
-                            className="
-                              font-mono
-                              text-xs
-                              font-bold
-                              text-fg
-                              sm:text-sm
-                            "
-                          >
-                            {entry.points.toLocaleString()}
-                          </p>
-
-                          <p
-                            className="
-                              mt-0.5
-                              font-mono
-                              text-[8px]
-                              text-dim
-                              sm:text-[10px]
-                            "
-                          >
-                            {entry.solves} solves
-                          </p>
-                        </div>
-                      </motion.div>
-                    ),
-                  )}
+                <div className="grid grid-cols-4 gap-2 sm:gap-3">
+                  <CountdownUnit value={days} label="Days" />
+                  <CountdownUnit value={hours} label="Hrs" />
+                  <CountdownUnit value={minutes} label="Min" />
+                  <CountdownUnit value={seconds} label="Sec" />
                 </div>
               </div>
 
               {/* =================================================
-                  LIVE ACTIVITY
+                  FOOTER NOTE
               ================================================= */}
 
               <div
@@ -721,53 +560,10 @@ export default function CTFInteractivePreview() {
                   dark:bg-white/[0.02]
                 "
               >
-                <div className="flex items-center gap-2">
-                  <Flag className="h-3.5 w-3.5 flex-none text-accent" />
-
-                  <AnimatePresence
-                    mode="wait"
-                  >
-                    <motion.p
-                      key={feedIdx}
-                      initial={{
-                        opacity: 0,
-                        y: 5,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        y: -5,
-                      }}
-                      transition={{
-                        duration: 0.2,
-                      }}
-                      className="
-                        truncate
-                        font-mono
-                        text-[9px]
-                        text-muted
-                        sm:text-xs
-                      "
-                    >
-                      <b className="font-medium text-fg">
-                        {feedEvents[
-                          feedIdx
-                        ][0]}
-                      </b>
-
-                      <span className="mx-1.5 text-dim">
-                        /
-                      </span>
-
-                      {feedEvents[
-                        feedIdx
-                      ][1]}
-                    </motion.p>
-                  </AnimatePresence>
-                </div>
+                <p className="flex items-center gap-2 font-mono text-[9px] text-muted sm:text-xs">
+                  <span className="h-1.5 w-1.5 flex-none rounded-full bg-dim" />
+                  Scoreboard, categories & registration open closer to launch.
+                </p>
               </div>
             </div>
           </motion.div>

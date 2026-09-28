@@ -33,14 +33,14 @@ const items: BentoItem[] = [
     code: 'S-01',
     title: 'Website Management',
     description:
-      'Your site, watched and maintained every day. CMS, stack, store — and everything that breaks at 2am. Named engineer, monthly reporting, and no surprises.',
+      'Your website, monitored, maintained and continuously improved. From CMS and infrastructure to e-commerce operations, we help keep your digital presence secure, reliable and ready to grow.',
     href: '/services/website-management',
     icon: <Globe className="h-5 w-5" />,
-    metric: '99.97% uptime across managed properties',
+    metric: 'Built for reliable digital operations',
     features: [
-      '24/7 uptime, SSL & malware monitoring',
-      'Core, plugin & dependency patching',
-      'E-commerce ops & Core Web Vitals',
+      'Uptime, SSL & security monitoring',
+      'Core, plugin & dependency updates',
+      'E-commerce operations & performance',
       'New features, redesigns & integrations',
     ],
     span: 'md:col-span-2 md:row-span-2',
@@ -50,13 +50,15 @@ const items: BentoItem[] = [
     code: 'S-02',
     title: 'Social Media & Growth',
     description:
-      'Posts, reels and copy on a calendar you approve, connected to analytics that tie campaigns and content back to business growth.',
+      'Strategic content, social media management and digital campaigns designed to build your brand presence, engage your audience and support sustainable growth.',
     href: '/services/social-media-growth',
     icon: <TrendingUp className="h-5 w-5" />,
-    metric: 'Weekly numbers · monthly review',
+    metric: 'Strategy driven by your goals',
     features: [
-      'Technical SEO & content clusters',
-      'Meta & Google Ads testing',
+      'Social media strategy & content',
+      'Technical SEO & content planning',
+      'Meta & Google Ads management',
+      'Campaign tracking & optimisation',
     ],
     span: 'md:col-span-1',
   },
@@ -64,13 +66,15 @@ const items: BentoItem[] = [
     code: 'S-03',
     title: 'Industry Internships',
     description:
-      'Cohorts in Cybersecurity, Full-Stack and DevOps — mentored by engineers working on real-world technology projects.',
+      'Practical learning experiences in Cybersecurity, Full-Stack Development and DevOps, supported by mentorship and real-world technology projects.',
     href: '/academy/internships',
     icon: <GraduationCap className="h-5 w-5" />,
-    metric: '1,840 enrolled · live tickets from week 4',
+    metric: 'Learn. Build. Grow.',
     features: [
-      'One mentor per six interns',
-      'Signed skill report at completion',
+      'Industry-focused technical learning',
+      'Mentorship from technology professionals',
+      'Hands-on projects & practical exposure',
+      'Skill development & completion guidance',
     ],
     span: 'md:col-span-1',
   },
@@ -78,13 +82,15 @@ const items: BentoItem[] = [
     code: 'S-04',
     title: 'CTF & Developer Events',
     description:
-      'Live capture-the-flag arenas, hackathons and coding competitions with isolated infrastructure, live scoring and anti-cheat systems.',
+      'Interactive capture-the-flag competitions, hackathons and coding events designed to bring developers, students and security enthusiasts together.',
     href: '/platform/ctf-events',
     icon: <Flag className="h-5 w-5" />,
-    metric: 'Scale tested to 2,400 concurrent teams',
+    metric: 'Built for engaging technical events',
     features: [
       'Jeopardy & attack-defend formats',
-      'White-label on your own domain',
+      'Custom competition environments',
+      'Live scoring & event management',
+      'Security-focused challenges',
     ],
     span: 'md:col-span-1',
   },
@@ -92,13 +98,15 @@ const items: BentoItem[] = [
     code: 'S-05',
     title: 'Hire Developers & Talent Hub',
     description:
-      'Shortlist from verified solve records, technical submissions and mentor feedback instead of relying only on CVs.',
+      'Connect with technical talent through practical skills, project experience and technical capabilities — helping organisations find developers beyond the traditional CV.',
     href: '/platform/hire-developers',
     icon: <Users className="h-5 w-5" />,
-    metric: '212 placements made in 2025',
+    metric: 'Connecting talent with opportunity',
     features: [
-      'Verified-skill search · 1,204 profiles',
-      '90-day replacement guarantee',
+      'Skills-focused talent discovery',
+      'Technical project evaluation',
+      'Developer and organisation matching',
+      'Technology-focused hiring support',
     ],
     span: 'md:col-span-2',
   },
@@ -239,7 +247,7 @@ export default function ServicesBento() {
                   md:p-7
                   `,
                   item.featured &&
-                    'min-h-[440px] md:min-h-[560px]',
+                  'min-h-[440px] md:min-h-[560px]',
                 )}
               >
                 {/* =================================================
@@ -363,7 +371,7 @@ export default function ServicesBento() {
                         sm:text-2xl
                         `,
                         item.featured &&
-                          'md:text-3xl',
+                        'md:text-3xl',
                       )}
                     >
                       {item.title}
@@ -402,7 +410,7 @@ export default function ServicesBento() {
                       text-muted
                       `,
                       item.featured &&
-                        'md:text-[15px]',
+                      'md:text-[15px]',
                     )}
                   >
                     {item.description}
@@ -422,7 +430,7 @@ export default function ServicesBento() {
                     space-y-3
                     `,
                     item.featured &&
-                      'md:mt-8',
+                    'md:mt-8',
                   )}
                 >
                   {item.features.map(
@@ -516,7 +524,7 @@ export default function ServicesBento() {
                         text-dim
                       "
                     >
-                      PERFORMANCE SIGNAL
+                      SERVICE FOCUS
                     </span>
 
                     <span

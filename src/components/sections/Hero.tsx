@@ -67,9 +67,10 @@ export default function Hero() {
               Next-Gen <span className="text-gradient-white">Infrastructure, Security</span> &amp; Tech Talent
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-muted md:text-lg">
-              Nexus Forge runs website and social operations for 40+ brands across India. The same team
-              trains engineers, proves their skill in live CTFs, and places them into the roles that
-              need them.
+              We build, manage, and scale the technology that modern businesses depend on.
+              From high-performance websites and measurable digital growth to developer talent, internships, and competitive tech ecosystems, NexForTech turns complex challenges into reliable solutions.
+              <br></br><b>One technology partner. Five capabilities. Built to keep your business moving forward.</b>
+
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <NeonButton href="/contact">
@@ -136,18 +137,6 @@ export default function Hero() {
               ))}
             </div>
           </motion.div>
-        </div>
-      </div>
-
-      {/* Real-time metrics ticker */}
-      <div className="relative border-y border-overlay/[0.08] bg-overlay/[0.015] py-4" aria-label="Live metrics">
-        <div className="flex w-max animate-marquee gap-12">
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 whitespace-nowrap font-mono text-xs tracking-widest text-dim">
-              <span className="h-1 w-1 rounded-full bg-accent" />
-              {item}
-            </span>
-          ))}
         </div>
       </div>
     </section>

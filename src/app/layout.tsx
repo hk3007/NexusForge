@@ -18,9 +18,14 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Nexus Forge — Next-Gen Infrastructure, Security & Tech Talent',
+  title: 'NexForTech — Next-Gen Infrastructure, Security & Tech Talent',
   description:
     'Nexus Forge runs website and social operations for growing brands, hosts live CTF arenas, and trains, tests and places the engineers who keep systems running.',
+  icons: {
+    icon: '/favicon-globe.ico',
+    shortcut: '/favicon-globe.ico',
+    apple: '/favicon-globe.ico',
+  },
 };
 
 // Applies the persisted theme before hydration so there is no flash.
@@ -29,6 +34,9 @@ const themeInitScript = `(function(){try{var t=localStorage.getItem('nf-theme');
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`dark ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon-globe.ico" sizes="any" />
+      </head>
       <body className="bg-base font-sans text-fg">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Navbar />

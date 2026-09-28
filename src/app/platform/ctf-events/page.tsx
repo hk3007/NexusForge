@@ -1,89 +1,83 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUpRight, CalendarDays, Flag, MapPin, Ticket, Timer, Users } from 'lucide-react';
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Flag,
+  Lock,
+  MapPin,
+  Ticket,
+  Timer,
+} from 'lucide-react';
 import HeroGlow from '@/components/ui/HeroGlow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import GlassCard from '@/components/ui/GlassCard';
 import NeonButton from '@/components/ui/NeonButton';
+import RegisterForm from '@/components/RegisterForm/RegisterForm';
 import { cn } from '@/lib/utils';
-import type { CTFEvent, LeaderboardEntry } from '@/types';
+import { monsoonPricingTiers, getMonsoonPrice, MONSOON_START } from '@/lib/pricing';
 
-const events: CTFEvent[] = [
+/* =========================================================
+   PLANNED EVENTS
+========================================================= */
+
+interface PlannedEvent {
+  id: string;
+  day: string;
+  month: string;
+  title: string;
+  description: string;
+  format: string;
+  location: string;
+  entry: string;
+  startsAt: string;
+}
+
+const plannedEvents: PlannedEvent[] = [
   {
-    id: 'ctf04',
-    day: '08',
-    month: 'AUG',
-    title: 'Nexus Forge CTF 04 — Monsoon',
-    description: '24 hours, jeopardy format. Web, crypto, reversing, cloud misconfiguration. Teams of up to four.',
+    id: 'ctf01',
+    day: '20',
+    month: 'OCT',
+    title: 'Operation Monsoon — our first CTF',
+    description:
+      '24 hours, jeopardy format. Web, crypto, reversing, cloud misconfiguration. Teams of up to four.',
     format: 'Jeopardy · 24h',
     location: 'Online',
-    entry: 'Free entry',
-    seats: '1,120 registered',
-    startsAt: '2026-08-08T09:00:00+05:30',
-    status: 'live',
+    entry: 'Paid — tiered pricing',
+    startsAt: MONSOON_START,
   },
   {
-    id: 'cohort12',
-    day: '18',
-    month: 'AUG',
-    title: 'Cohort 12 begins — Offensive Security',
-    description: 'Sixteen weeks, part-time, mentored. Applications close 5 August; 40 seats.',
+    id: 'cohort01',
+    day: 'TBA',
+    month: '',
+    title: 'Cohort 01 — Offensive Security internship',
+    description:
+      'Sixteen weeks, part-time, mentored. Dates and application window to be announced.',
     format: 'Internship cohort',
-    location: 'Pune + remote',
+    location: 'Online',
     entry: 'Paid internship',
-    seats: '40 seats',
-    startsAt: '2026-08-18T10:00:00+05:30',
-    status: 'upcoming',
+    startsAt: '',
   },
   {
     id: 'shipit',
-    day: '05',
-    month: 'SEP',
+    day: 'TBA',
+    month: '',
     title: 'Ship It — Next.js build sprint',
-    description: 'One weekend, one brief, working deploys only. Judged on performance budgets and accessibility, not slides.',
+    description:
+      'One weekend, one brief, working deploys only. Judged on performance budgets and accessibility, not slides.',
     format: 'Hackathon · weekend',
-    location: 'Kharadi, Pune',
-    entry: 'Free entry',
-    seats: '120 seats',
-    startsAt: '2026-09-05T09:00:00+05:30',
-    status: 'upcoming',
-  },
-  {
-    id: 'blueteam',
-    day: '27',
-    month: 'SEP',
-    title: 'Blue Team Day — SOC triage clinic',
-    description: 'Live incident replays with real log sets. Bring a laptop; we bring the alerts and the noise.',
-    format: 'Workshop · 1 day',
     location: 'Online',
-    entry: '$6',
-    seats: '200 seats',
-    startsAt: '2026-09-27T10:00:00+05:30',
-    status: 'upcoming',
+    entry: 'Free entry',
+    startsAt: '',
   },
 ];
 
-const baseBoard: LeaderboardEntry[] = [
-  { rank: 1, team: 'nullbyte_ninjas', solves: 14, points: 4820, lastSolve: 'web/ssti-bakery' },
-  { rank: 2, team: 'deccan_daemons', solves: 13, points: 4510, lastSolve: 'rev/nullbyte' },
-  { rank: 3, team: 'p0int_break', solves: 12, points: 4180, lastSolve: 'cloud/leaky-bucket' },
-  { rank: 4, team: 'shellsmiths', solves: 11, points: 3960, lastSolve: 'crypto/lattice-lane' },
-  { rank: 5, team: 'zero_cool_v2', solves: 10, points: 3640, lastSolve: 'pwn/heap-of-trouble' },
-  { rank: 6, team: 'kernel_panic_club', solves: 9, points: 3320, lastSolve: 'web/jwt-jugaad' },
-  { rank: 7, team: 'monsoon_mavericks', solves: 9, points: 3180, lastSolve: 'forensics/wet-logs' },
-];
-
-const challenges = [
-  { code: 'web/ssti-bakery', points: 400, solves: 42, difficulty: 'medium' },
-  { code: 'rev/nullbyte', points: 500, solves: 11, difficulty: 'hard' },
-  { code: 'cloud/leaky-bucket', points: 300, solves: 78, difficulty: 'easy' },
-  { code: 'crypto/lattice-lane', points: 450, solves: 19, difficulty: 'hard' },
-  { code: 'pwn/heap-of-trouble', points: 500, solves: 8, difficulty: 'insane' },
-  { code: 'forensics/wet-logs', points: 250, solves: 96, difficulty: 'easy' },
-];
+/* =========================================================
+   COUNTDOWN
+========================================================= */
 
 interface Remaining {
   days: number;
@@ -109,12 +103,21 @@ function Countdown({ target }: { target: string }) {
   const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!target) return;
     setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [target]);
 
-  // Render placeholders until mounted to keep static export hydration clean
+  if (!target) {
+    return (
+      <div className="flex items-center gap-1.5 font-mono text-xs text-dim" aria-label="Date to be announced">
+        <Timer className="h-3.5 w-3.5" />
+        <span>Date to be announced</span>
+      </div>
+    );
+  }
+
   const r = now === null ? null : getRemaining(target, now);
 
   return (
@@ -123,7 +126,7 @@ function Countdown({ target }: { target: string }) {
       {r === null ? (
         <span className="text-dim">--d --h --m --s</span>
       ) : r.done ? (
-        <span className="font-bold text-fg">IN PROGRESS</span>
+        <span className="font-bold text-fg">STARTING</span>
       ) : (
         <span className="text-muted">
           <b className="text-fg">{r.days}d</b> {String(r.hours).padStart(2, '0')}h{' '}
@@ -135,21 +138,16 @@ function Countdown({ target }: { target: string }) {
 }
 
 export default function CTFEventsPage() {
-  const [board, setBoard] = useState(baseBoard);
+  const firstEvent = plannedEvents[0];
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setBoard((prev) =>
-        [...prev]
-          .map((e) => ({ ...e, points: e.points + Math.floor(Math.random() * 35) }))
-          .sort((a, b) => b.points - a.points)
-          .map((e, i) => ({ ...e, rank: i + 1 })),
-      );
-    }, 2600);
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const liveEvent = useMemo(() => events.find((e) => e.status === 'live'), []);
+  const currentPrice = getMonsoonPrice(now);
 
   const partnerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: partnerProgress } = useScroll({
@@ -178,12 +176,12 @@ export default function CTFEventsPage() {
               S-04 · CTF & DEVELOPER EVENTS PLATFORM
             </span>
             <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-fg md:text-5xl">
-              We host the competition. <span className="text-gradient-white">You watch the talent surface.</span>
+              We're building the arena. <span className="text-gradient-white">First competition coming soon.</span>
             </h1>
             <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
-              Capture-the-flag events and developer contests end to end: isolated challenge
-              infrastructure, live scoreboard, anti-cheat, and a write-up archive afterwards. Run it as
-              a public event or a private hiring round.
+              Capture-the-flag events and developer contests, end to end: isolated challenge
+              infrastructure, live scoreboard, anti-cheat, and a write-up archive afterwards. Our
+              first public event is in the works — here's what's planned so far.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <NeonButton href="/contact">
@@ -191,12 +189,14 @@ export default function CTFEventsPage() {
                 <ArrowUpRight className="h-4 w-4" />
               </NeonButton>
               <NeonButton href="#events" variant="outline">
-                Browse Competitions
+                See What's Planned
               </NeonButton>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-2 border-t border-overlay/[0.08] pt-6 font-mono text-xs text-dim">
-              <span>Scale tested to · <b className="font-medium text-fg">2,400 concurrent teams</b></span>
-              <span>Events run · <b className="font-medium text-fg">96</b></span>
+              <span className="flex items-center gap-1.5">
+                <Lock className="h-3 w-3" />
+                No events run yet — first one launching soon
+              </span>
             </div>
           </motion.div>
         </div>
@@ -221,7 +221,6 @@ export default function CTFEventsPage() {
             style={{ scale: logoScale, opacity: logoOpacity }}
             className="relative mt-10 flex items-center justify-center py-6"
           >
-            {/* Rotating dashed ring */}
             <motion.span
               aria-hidden="true"
               style={{ rotate: ringRotate }}
@@ -232,7 +231,6 @@ export default function CTFEventsPage() {
               style={{ rotate: ringRotate }}
               className="absolute h-[190px] w-[190px] rounded-full border border-line/50 sm:h-[240px] sm:w-[240px] md:h-[300px] md:w-[300px]"
             />
-            {/* Pulsing glow behind the mark */}
             <motion.span
               aria-hidden="true"
               style={{ opacity: glowOpacity }}
@@ -260,120 +258,109 @@ export default function CTFEventsPage() {
         </div>
       </section>
 
-      {/* Live leaderboard + challenge arena mockup */}
+      {/* Coming soon — first event spotlight */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeader
-            badge="flag{live.now}"
-            title={liveEvent ? liveEvent.title : 'Arena'}
-            description="Scores drift as teams submit flags. First-blood alerts, freeze window and full submission audit trail included in every event."
+            badge="flag{coming.soon}"
+            title={firstEvent.title}
+            description="This is our first event. There's no live scoreboard or challenge arena yet — both go live the moment the event opens. Here's what to expect."
           />
-          <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            {/* Leaderboard */}
-            <GlassCard hover={false} className="overflow-hidden">
-              <div className="flex items-center gap-2.5 border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
-                <span className="h-2 w-2 rounded-full bg-live animate-pulse-dot" />
-                <span className="font-mono text-xs text-muted">scoreboard · live</span>
-                {liveEvent && (
-                  <span className="ml-auto">
-                    <Countdown target={liveEvent.startsAt} />
-                  </span>
-                )}
-              </div>
-              <div className="px-5 py-1">
-                {board.map((entry) => (
-                  <motion.div
-                    key={entry.team}
-                    layout
-                    transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
-                    className="flex items-center gap-4 border-b border-overlay/[0.04] py-3 last:border-0"
-                  >
-                    <span
-                      className={cn(
-                        'flex h-8 w-8 flex-none items-center justify-center rounded-lg border font-mono text-xs font-bold',
-                        entry.rank <= 3
-                          ? 'border-accent bg-accent text-inverse'
-                          : 'border-line bg-shade/25 text-muted',
-                      )}
-                    >
-                      {entry.rank}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate font-mono text-sm text-fg">{entry.team}</p>
-                      <p className="truncate font-mono text-[10px] text-dim">last: {entry.lastSolve}</p>
-                    </div>
-                    <div className="ml-auto text-right">
-                      <p className="font-mono text-sm font-bold text-fg">{entry.points.toLocaleString()}</p>
-                      <p className="font-mono text-[10px] text-dim">{entry.solves} solves</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </GlassCard>
 
-            {/* Challenge arena */}
-            <GlassCard hover={false} className="overflow-hidden">
-              <div className="flex items-center gap-2.5 border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
-                <Flag className="h-3.5 w-3.5 text-fg" />
-                <span className="font-mono text-xs text-muted">challenge arena · 6 of 24 shown</span>
+          <GlassCard hover={false} className="overflow-hidden">
+            <div className="flex flex-wrap items-center gap-2.5 border-b border-overlay/[0.08] bg-shade/30 px-5 py-3.5">
+              <Lock className="h-3.5 w-3.5 text-dim" />
+              <span className="font-mono text-xs text-muted">arena · locked until launch</span>
+              <span className="ml-auto">
+                <Countdown target={firstEvent.startsAt} />
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-dim">Format</p>
+                <p className="mt-1.5 text-sm text-fg">{firstEvent.format}</p>
               </div>
-              <div className="grid grid-cols-1 gap-2.5 p-4 sm:grid-cols-2">
-                {challenges.map((c) => (
-                  <div
-                    key={c.code}
-                    className="group cursor-pointer rounded-xl border border-line bg-soft p-4 transition-colors hover:border-accent/60"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-dim">
-                        {c.difficulty}
-                      </span>
-                      <span className="font-mono text-xs font-bold text-fg">{c.points} pts</span>
-                    </div>
-                    <p className="mt-2.5 truncate font-mono text-[13px] text-fg">{c.code}</p>
-                    <p className="mt-1.5 font-mono text-[10px] text-dim">{c.solves} solves</p>
-                    <div className="mt-3 h-1 overflow-hidden rounded-full bg-line">
-                      <div
-                        className="h-full rounded-full bg-accent/70"
-                        style={{ width: `${Math.min(100, c.solves)}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-dim">Location</p>
+                <p className="mt-1.5 text-sm text-fg">{firstEvent.location}</p>
               </div>
-              <div className="border-t border-overlay/[0.08] bg-shade/30 px-5 py-3">
-                <p className="font-mono text-[11px] text-dim">
-                  Per-team containerised instances · flag-sharing detection · submission audit trail
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-dim">Current price</p>
+                <p className="mt-1.5 flex items-center gap-2 text-sm text-fg">
+                  <span className="font-bold">{currentPrice.price}</span>
+                  <span className="rounded-md border border-accent/40 bg-accent/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-accent">
+                    {currentPrice.label}
+                  </span>
                 </p>
               </div>
-            </GlassCard>
-          </div>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-dim">Categories</p>
+                <p className="mt-1.5 text-sm text-fg">Web, crypto, reversing, cloud misconfiguration</p>
+              </div>
+            </div>
+
+            {/* Pricing tiers */}
+            <div className="grid grid-cols-1 gap-3 border-t border-overlay/[0.08] p-6 sm:grid-cols-3">
+              {monsoonPricingTiers.map((tier) => {
+                const isActive = tier.label === currentPrice.label;
+                return (
+                  <div
+                    key={tier.label}
+                    className={cn(
+                      'rounded-xl border px-4 py-3 text-center transition-colors',
+                      isActive
+                        ? 'border-accent bg-accent/[0.06]'
+                        : 'border-line bg-shade/20',
+                    )}
+                  >
+                    <p className="font-mono text-[9px] uppercase tracking-widest text-dim">
+                      {tier.label}
+                    </p>
+                    <p className={cn('mt-1 text-lg font-extrabold tracking-tight', isActive ? 'text-accent' : 'text-fg')}>
+                      {tier.price}
+                    </p>
+                    {isActive && (
+                      <p className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-accent">
+                        Current
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Registration form */}
+            <div className="border-t border-overlay/[0.08] p-6">
+              <RegisterForm eventId={firstEvent.id} />
+            </div>
+
+            <div className="border-t border-overlay/[0.08] bg-shade/30 px-5 py-3">
+              <p className="font-mono text-[11px] text-dim">
+                Per-team containerised instances · flag-sharing detection · submission audit trail — all active from event start.
+              </p>
+            </div>
+          </GlassCard>
         </div>
       </section>
 
-      {/* Active & upcoming */}
+      {/* Planned events */}
       <section className="border-t border-overlay/[0.08] py-20 md:py-28" id="events">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeader
-            badge="flag{on.the.calendar}"
-            title="Active & upcoming competitions"
-            description="Open to anyone. Free to enter unless marked otherwise, and every event ships public write-ups afterwards."
+            badge="flag{on.the.roadmap}"
+            title="What's planned"
+            description="Nothing below has run yet — this is the roadmap, not a history. Dates will firm up as each event is confirmed."
           />
           <div className="grid gap-4 md:grid-cols-2">
-            {events.map((ev, i) => (
+            {plannedEvents.map((ev, i) => (
               <GlassCard key={ev.id} delay={i * 0.06} className="p-6">
                 <div className="flex gap-5">
                   <div className="flex-none border-r border-overlay/[0.08] pr-5 text-center">
                     <p className="text-3xl font-extrabold tracking-tight text-fg">{ev.day}</p>
-                    <p className="font-mono text-[10px] tracking-widest text-dim">{ev.month}</p>
-                    <span
-                      className={cn(
-                        'mt-3 inline-block rounded-md border px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest',
-                        ev.status === 'live'
-                          ? 'border-accent bg-accent text-inverse'
-                          : 'border-line text-dim',
-                      )}
-                    >
-                      {ev.status}
+                    <p className="font-mono text-[10px] tracking-widest text-dim">{ev.month || '—'}</p>
+                    <span className="mt-3 inline-block rounded-md border border-line px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-dim">
+                      planned
                     </span>
                   </div>
                   <div className="min-w-0">
@@ -382,8 +369,10 @@ export default function CTFEventsPage() {
                     <div className="mt-3.5 flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[11px] text-dim">
                       <span className="flex items-center gap-1.5"><CalendarDays className="h-3 w-3" />{ev.format}</span>
                       <span className="flex items-center gap-1.5"><MapPin className="h-3 w-3" />{ev.location}</span>
-                      <span className="flex items-center gap-1.5"><Ticket className="h-3 w-3" />{ev.entry}</span>
-                      <span className="flex items-center gap-1.5"><Users className="h-3 w-3" />{ev.seats}</span>
+                      <span className="flex items-center gap-1.5">
+                        <Ticket className="h-3 w-3" />
+                        {ev.id === 'ctf01' ? `${currentPrice.price} (${currentPrice.label})` : ev.entry}
+                      </span>
                     </div>
                     <div className="mt-4 border-t border-overlay/[0.06] pt-3.5">
                       <Countdown target={ev.startsAt} />

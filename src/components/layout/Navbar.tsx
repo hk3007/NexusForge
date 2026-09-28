@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -214,40 +215,80 @@ function Dropdown({
 }
 
 /* =========================================================
-   NEXFORTECH BRAND MARK
+   NEXFORTECH BRAND MARK (LOGO)
+   ---------------------------------------------------------
+   The wordmark ("NEX FOR TECH") is baked into the image
+   itself, so no separate "NexForTech" text is rendered next
+   to it anymore.
+
+   Two PRE-COLORED, TRUE-TRANSPARENT PNGs are used (no CSS
+   blend-mode hacks, which fail on light backgrounds because
+   the logo's white ink washes out to invisible on white):
+
+     /public/logo-nexfortech-dark.png   -> white/red ink, for dark navbar backgrounds
+     /public/logo-nexfortech-light.png  -> black/red ink, for light navbar backgrounds
+
+   The correct variant is swapped in based on the resolved
+   theme from next-themes (adjust the hook to match however
+   your ThemeToggle tracks theme, if different).
 ========================================================= */
 
+/**
+ * Reads the resolved theme directly off <html>, independent of any
+ * theme library. Works with:
+ *   - a `dark` class on <html> (Tailwind darkMode: 'class')
+ *   - a `data-theme="dark" | "light"` attribute on <html>
+ * If your ThemeToggle uses something else (e.g. next-themes'
+ * ThemeProvider + useTheme), tell me and I'll wire this to that
+ * instead — but this version works with no extra setup either way.
+ */
+function useIsDarkTheme() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const computeIsDark = () => {
+      const dataTheme = root.getAttribute('data-theme');
+      if (dataTheme) return dataTheme === 'dark';
+      return root.classList.contains('dark');
+    };
+
+    setIsDark(computeIsDark());
+
+    const observer = new MutationObserver(() => {
+      setIsDark(computeIsDark());
+    });
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
 function BrandMark() {
+  const isDark = useIsDarkTheme();
+
+  const src = isDark
+    ? '/logo-nexfortech-dark.png'
+    : '/logo-nexfortech-light.png';
+
   return (
-    <svg
-      className="h-7 w-7"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect
-        x="1.2"
-        y="1.2"
-        width="21.6"
-        height="21.6"
-        rx="6"
-        stroke="currentColor"
-        strokeWidth="1.5"
+    <span className="relative block h-8 w-[162px] flex-none">
+      <Image
+        src={src}
+        alt="NexForTech"
+        fill
+        priority
+        className="object-contain object-left"
+        sizes="162px"
       />
-
-      <circle
-        cx="12"
-        cy="12"
-        r="3.2"
-        fill="currentColor"
-      />
-
-      <path
-        d="M12 1.2v5.6M12 17.2v5.6M1.2 12h5.6M17.2 12h5.6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-    </svg>
+    </span>
   );
 }
 
@@ -436,9 +477,6 @@ export default function Navbar() {
               'flex items-center',
               'h-[64px]',
               'sm:h-[68px]',
-              'gap-3',
-              'sm:gap-5',
-              'lg:gap-7',
               'px-3',
               'sm:px-5',
               'lg:px-6',
@@ -451,33 +489,9 @@ export default function Navbar() {
             <Link
               href="/"
               aria-label="NexForTech Home"
-              className={cn(
-                'group flex flex-none',
-                'items-center gap-2.5',
-                'text-base sm:text-lg',
-                'font-extrabold',
-                'tracking-tight',
-                'text-fg',
-              )}
+              className="group flex flex-none items-center"
             >
-              <span
-                className={cn(
-                  'transition-transform duration-300',
-                  'group-hover:rotate-6',
-                )}
-              >
-                <BrandMark />
-              </span>
-
-              {/* Desktop / Tablet */}
-              <span className="hidden xs:inline">
-                NexForTech
-              </span>
-
-              {/* Small Mobile */}
-              <span className="xs:hidden">
-                NexForTech
-              </span>
+              <BrandMark />
             </Link>
 
             {/* =================================================
